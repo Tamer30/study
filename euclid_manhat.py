@@ -86,3 +86,53 @@ manhatten_df = pd.concat((manhatten_df, y_train), axis=1)
 # выполните сортировку по возрастанию расстояний и выведите 10 наблюдений
 print(euclidian_df.sort_values(by='euclidean').head(10))
 print(manhatten_df.sort_values(by='manhatten').head(10))
+
+##########################################################
+##########################################################
+##########################################################
+##########################################################
+##########################################################
+##########################################################
+
+#Задача 2
+#Выполните подготовку данных и обучите модель kNN —  одну с Евклидовым расстоянием, другую — с Манхэттенским. Оцените качество решения модели метрикой accuracy в обоих случаях.
+
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import OneHotEncoder
+from sklearn.preprocessing import StandardScaler
+
+# импортируйте функцию для оценки качества модели 
+from sklearn.metrics import accuracy_score
+
+# импортируйте класс для модели классификации kNN 
+from sklearn.neighbors import KNeighborsClassifier
+
+# создание константы RANDOM_STATE
+RANDOM_STATE = 42
+
+# выполняем подготовку данных функцией, все операции в скрытом прекоде
+X_train, X_test, y_train, y_test = prepare_data('music_genre_2_classes_balanced_v2_exp.csv')
+
+
+# создайте и обучите модель kNN на тренировочных данных
+# при обучении модель должна использовать 300 ближайших соседей и Евклидово расстояние
+model = KNeighborsClassifier(n_neighbors=300, metric='euclidean')
+model.fit(X_train, y_train)
+preds = model.predict(X_test)
+
+# выполните тестирование на тестовой выборке
+euclidean_accuracy = accuracy_score(y_test, preds)
+
+# создайте и обучите модель kNN на тренировочных данных
+# при обучении модель должна использовать 300 ближайших соседей и Манхэттенское расстояние
+model = KNeighborsClassifier(n_neighbors=300, metric='cityblock')
+model.fit(X_train, y_train)
+preds = model.predict(X_test)
+
+# выполните тестирование на тестовой выборке
+cityblock_accuracy = accuracy_score(y_test, preds)
+
+# выведите на экран обе метрики
+print('Accuracy (euclidean distance) =', euclidean_accuracy)
+print('Accuracy (cityblock distance) =', cityblock_accuracy)
