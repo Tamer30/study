@@ -56,3 +56,10 @@ print('F1-score =', round(f1,2))
 # постройте матрицу ошибок методом from_estimator()
 ConfusionMatrixDisplay.from_estimator(model, X_test, y_test)
 plt.show()
+
+##################################################################
+
+from imblearn.over_sampling import SMOTETomek
+
+sampler = SMOTETomek(random_state=42)
+X_resample, y_resample = sampler.fit_resample(X, y) 
