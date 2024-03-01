@@ -63,3 +63,10 @@ from imblearn.over_sampling import SMOTETomek
 
 sampler = SMOTETomek(random_state=42)
 X_resample, y_resample = sampler.fit_resample(X, y) 
+
+###################################################################
+#Взвешивание классов
+
+from sklearn.linear_model import LogisticRegression
+
+model = LogisticRegression(class_weight='balanced') 
