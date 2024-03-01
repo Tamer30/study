@@ -80,3 +80,69 @@ for train_split, test_split in kfold.split(X):
 
 s_kfold = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
 s_kfold.split(X, y) 
+
+
+
+####################################################################
+
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split, StratifiedKFold
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
+from sklearn.metrics import f1_score
+
+# Создание константы RANDOM_STATE
+RANDOM_STATE = 42
+
+# Загрузка данных из CSV-файла в датафрейм pandas
+df = pd.read_csv('music_genre_2_classes_imbalanced_v2.csv')
+X = df.drop(columns='music_genre')
+y = df.music_genre
+
+# Формирование тренировочной и тестовой выборок со стратификацией
+# Подготовка данных выполнена функцией, все операции в скрытом прекоде
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=RANDOM_STATE, stratify=y)
+
+# Подготовка данных выполнена функцией, все операции в скрытом прекоде
+X_train, X_test = prepare_data(X_train, X_test)
+
+# Создание экземпляра StratifiedKFold с пятью блоками
+# Используйте перемешивание данных и зафиксируйте random_state
+s_kfold = StratifiedKFold(n_splits=5, shuffle=True, random_state=RANDOM_STATE)
+
+# Список для сохранения оценок F1
+f1 = []
+
+# Обучение и проверка модели с использованием кросс-валидации
+for train_index, test_index in s_kfold.split(X_train, y_train):
+    # Разделение данных на тренировочную и валидационную выборки
+    X_train_cv, X_test_cv = X_train.iloc[train_index], X_train.iloc[test_index]
+    y_train_cv, y_test_cv = y_train.iloc[train_index], y_train.iloc[test_index]
+    
+    # Инициализация и обучение модели на кросс-валидационной выборке
+    model = KNeighborsClassifier()
+    model.fit(X_train_cv, y_train_cv)
+    
+    # Оценка качества модели во время кросс-валидации
+    y_pred = model.predict(X_test_cv)
+    f1_metric = f1_score(y_test_cv, y_pred, pos_label='Rock')
+    
+    # Сохранение оценок F1
+    f1.append(f1_metric)
+
+# Обучение модели на всех тренировочных данных
+model.fit(X_train, y_train)
+
+# Оценка качества модели на тестовой выборке
+y_pred_test = model.predict(X_test)
+f1_test = f1_score(y_test, y_pred_test, pos_label='Rock')
+
+# Усреднение оценок качества после кросс-валидации
+mean_f1 = sum(f1) / len(f1)
+
+# Вывод результатов
+print(f"[Кросс-валидация] Все значения F1-score: {[round(x,2) for x in f1]}")
+print(f"[Кросс-валидация] Среднее значение F1-score: {mean_f1:.2f}")
+print(f"[Тестовая выборка] F1-score: {f1_test:.2f}")
+
