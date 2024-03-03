@@ -27,4 +27,4 @@ model = DecisionTreeClassifier(random_state=RANDOM_STATE)
 model.fit(X_train, y_train)
 
 # визуализируйте схему дерева решений
-plot_tree(decision_tree=model);
+plot_tree(decision_tree=model, filled=True);
