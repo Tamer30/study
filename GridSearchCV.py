@@ -48,3 +48,14 @@ gs.fit(X_train, y_train)
 
 # выводим лучшие гиперпараметры
 print(gs.best_params_)
+
+#########################################
+
+'max_depth': 2, 'min_samples_leaf': 1, 'min_samples_split': 2}
+
+Изучаем атрибуты GridSearchCV
+Пока мы вас вскользь познакомили с одним атрибутом GridSearchCV — best_params_. Что ещё вам может пригодиться:
+
+    best_estimator_ — лучшая обученная модель;
+    best_score_ — лучшая метрика при кросс-валидации;
+    cv_results_ — общие результаты поиска гиперпараметров.
