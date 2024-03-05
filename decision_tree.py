@@ -137,3 +137,16 @@ print(f'Search time:{loop_search_time}')
 loop_search_cv_results = pd.DataFrame(sorted(cv_results, key=lambda x: x[0], reverse=True))
 loop_search_cv_results.columns = ['Score', 'Params']
 print(loop_search_cv_results[:10])
+
+
+######################################################################################################
+
+# обучите модель
+model.fit(X_train, y_train)
+
+# сформируйте таблицу важности признаков
+feature_importances = pd.DataFrame(
+    {
+        'Feature': X_train.columns,
+        'Importance': model.feature_importances_
+    })
